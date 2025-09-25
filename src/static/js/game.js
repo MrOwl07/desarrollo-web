@@ -71,7 +71,7 @@ cardImages.forEach((imgName, idx) => {
     card.appendChild(backImg);
     card.appendChild(frontImg);
 
-    card.style.height = '120px';
+    card.style.height = '240px';
     card.style.background = '#eee';
     card.style.display = 'flex';
     card.style.alignItems = 'center';
