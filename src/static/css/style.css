@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 *:not(head, head *, style, script, svg, svg *),
 *:not(head, head *, style, script, svg, svg *)::before,
 *:not(head, head *, style, script, svg, svg *)::after {
@@ -5,7 +7,6 @@
 	box-sizing: border-box;
 }
 
-@charset "UTF-8";
 
 body,
 html {
