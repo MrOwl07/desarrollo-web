@@ -68,8 +68,12 @@ cardImages.forEach((imgName, idx) => {
     frontImg.style.objectFit = 'contain';
     frontImg.style.display = 'none';
 
-    card.appendChild(backImg);
-    card.appendChild(frontImg);
+    const cardInner = document.createElement('div');
+    cardInner.className = 'card-inner';
+
+    cardInner.appendChild(backImg);
+    cardInner.appendChild(frontImg);
+    card.appendChild(cardInner);
 
     card.style.height = '180px';
     card.style.background = '#2d1a1aff';
@@ -93,17 +97,24 @@ cardImages.forEach((imgName, idx) => {
             secondCard = card;
             lockBoard = true;
 
-            // Comparar
             if (firstCard.dataset.img === secondCard.dataset.img) {
                 // Par encontrado
+                firstCard.classList.add('match');
+                secondCard.classList.add('match');
+                setTimeout(() => {
+                    firstCard.classList.remove('match');
+                    secondCard.classList.remove('match');
+                }, 800); // Opcional: quitar el efecto después de un tiempo
                 firstCard = null;
                 secondCard = null;
                 lockBoard = false;
             } else {
-                // No es par, volver a tapar
+                // No es par, efecto rojo
+                firstCard.classList.add('nomatch');
+                secondCard.classList.add('nomatch');
                 setTimeout(() => {
-                    firstCard.classList.remove('flipped');
-                    secondCard.classList.remove('flipped');
+                    firstCard.classList.remove('flipped', 'nomatch');
+                    secondCard.classList.remove('flipped', 'nomatch');
                     firstCard.querySelector('.card-back').style.display = 'block';
                     firstCard.querySelector('.card-front').style.display = 'none';
                     secondCard.querySelector('.card-back').style.display = 'block';
