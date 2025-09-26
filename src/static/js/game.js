@@ -43,6 +43,33 @@ board.style.gap = '16px';
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
+const maxErrors = 10;
+let errors = 0;
+let matches = 0;
+const totalMatches = numCards / 2;
+let attempts = 0;
+
+const attemptsBanner = document.getElementById('attempts-banner');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalMessage = document.getElementById('modal-message');
+
+function updateAttemptsBanner() {
+    attemptsBanner.textContent = `Intentos restantes: ${maxErrors - errors}`;
+    attemptsBanner.className = errors >= maxErrors - 1 ? 'fail' : '';
+}
+updateAttemptsBanner();
+
+function showModal(msg) {
+    modalMessage.textContent = msg;
+    modalOverlay.style.display = 'flex';
+}
+
+function endGame(msg) {
+    showModal(msg);
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 3000);
+}
 
 cardImages.forEach((imgName, idx) => {
     const card = document.createElement('div');
@@ -96,22 +123,32 @@ cardImages.forEach((imgName, idx) => {
         } else {
             secondCard = card;
             lockBoard = true;
+            attempts++;
 
             if (firstCard.dataset.img === secondCard.dataset.img) {
                 // Par encontrado
                 firstCard.classList.add('match');
                 secondCard.classList.add('match');
+                matches++;
                 setTimeout(() => {
                     firstCard.classList.remove('match');
                     secondCard.classList.remove('match');
-                }, 800); // Opcional: quitar el efecto después de un tiempo
+                }, 800);
                 firstCard = null;
                 secondCard = null;
                 lockBoard = false;
+
+                // ¿Ganó?
+                if (matches === totalMatches) {
+                    endGame(`¡GANASTE en ${attempts} intentos!`);
+                }
             } else {
                 // No es par, efecto rojo
                 firstCard.classList.add('nomatch');
                 secondCard.classList.add('nomatch');
+                errors++;
+                updateAttemptsBanner();
+
                 setTimeout(() => {
                     firstCard.classList.remove('flipped', 'nomatch');
                     secondCard.classList.remove('flipped', 'nomatch');
@@ -122,6 +159,11 @@ cardImages.forEach((imgName, idx) => {
                     firstCard = null;
                     secondCard = null;
                     lockBoard = false;
+
+                    // ¿Perdió?
+                    if (errors >= maxErrors) {
+                        endGame('¡Ya no te quedan intentos!');
+                    }
                 }, 1000);
             }
         }
